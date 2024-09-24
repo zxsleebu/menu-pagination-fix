@@ -110,6 +110,7 @@ export async function createPagination(
                 allowBackToMenu,
                 displayDataFn,
                 buttonFn,
+                rowCount
             },
             menu
         );
@@ -131,10 +132,10 @@ export async function createPagination(
                         buttonFn(ctx, res.data[i]);
                     },
                 );
-                if((i + 1) % rowCount === 0) {
+                if ((rowCount && rowCount > 0 && ((i + 1) % rowCount === 0)) || !rowCount)
                     menu.row();
-                }
             });
+            menu.row();
         }
 
         await handleDynamicData(
@@ -163,6 +164,7 @@ async function handleStaticData(
         allowBackToMenu,
         displayDataFn,
         buttonFn,
+        rowCount
     } = options;
     if (staticData) {
         /** Calculate the maximum number of pages based on the length of 'staticData'. */
@@ -180,9 +182,12 @@ async function handleStaticData(
                         (ctx: ContextSessionMenu) => {
                             buttonFn(ctx, staticData[currentUserPage][i]);
                         },
-                    ).row();
+                    );
+                    if ((rowCount && rowCount > 0 && ((i + 1) % rowCount === 0)) || !rowCount)
+                        menu.row();
                 },
             );
+            menu.row();
         }
 
         /** Try to load a configuration object from a JSON file named "config." If it fails, use the 'schema' as a fallback. */
