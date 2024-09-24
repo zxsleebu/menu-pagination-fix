@@ -45,6 +45,8 @@ const userResult = confirm(
     "Do you want init @grammyjs/menu-pagination config file?",
 );
 
-if (userResult && await paginationConfig()) {
-    alert("✔ Your Pagination Config File was created");
-}
+(async () => {
+    if (userResult && await paginationConfig()) {
+        alert("✔ Your Pagination Config File was created");
+    }
+})().catch(() => {})
