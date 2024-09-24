@@ -15,7 +15,7 @@ interface CurrentPage {
     currentUserPage: number;
 }
 
-type ContextSessionMenu = Context & MenuFlavor & SessionFlavor<CurrentPage>;
+type ContextSessionMenu<C extends Context> = C & MenuFlavor<C> & SessionFlavor<CurrentPage>;
 type params = {
     maxPage: number;
     config: Config;
@@ -82,10 +82,10 @@ function validateInputs(
     return true;
 }
 
-export async function createPagination(
-    menu: MenuRange<ContextSessionMenu>,
-    ctx: ContextSessionMenu,
-    options: Partial<PaginationOptions>,
+export async function createPagination<C extends Context>(
+    menu: MenuRange<ContextSessionMenu<C>>,
+    ctx: C,
+    options: Partial<PaginationOptions<C>>,
 ) {
     const {
         staticData,
