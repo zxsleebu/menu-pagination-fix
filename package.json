@@ -15,8 +15,7 @@
         "url": "https://github.com/grammyjs/menu-pagination.git"
     },
     "exports": {
-        ".": "./out/mod.js",
-        ".": "./out/utils.js"
+        ".": "./out/mod.js"
     },
     "files": [
         "out/"
