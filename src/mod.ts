@@ -93,6 +93,7 @@ export async function createPagination(
         displayType = "text",
         dynamicDataFn,
         displayDataFn,
+        rowCount = 2,
         buttonFn,
     } = options;
 
@@ -129,7 +130,10 @@ export async function createPagination(
                     (ctx: ContextSessionMenu) => {
                         buttonFn(ctx, res.data[i]);
                     },
-                ).row();
+                );
+                if((i + 1) % rowCount === 0) {
+                    menu.row();
+                }
             });
         }
 
