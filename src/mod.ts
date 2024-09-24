@@ -8,13 +8,11 @@ import type {
     Schema,
     Session,
 } from "./types.ts";
-import { loadJsonIfExist, loadSchema, parseArrayIntoObjects as parseArrayIntoObjects_ } from "./utils.ts";
+import { loadJsonIfExist, loadSchema } from "./utils.ts";
 
 interface CurrentPage {
     currentUserPage: number;
 }
-
-export const parseArrayIntoObjects = parseArrayIntoObjects_;
 
 type ContextSessionMenu = Context & MenuFlavor & SessionFlavor<CurrentPage>;
 type params = {
@@ -169,8 +167,23 @@ async function handleStaticData(
         }
 
         /** Try to load a configuration object from a JSON file named "config." If it fails, use the 'schema' as a fallback. */
-        const config: Config = (await loadJsonIfExist("config")) as Config ||
-            (await loadSchema(schema)) as Config;
+        const config: Config = {
+            "maxBack": "<<",
+            "back": "<",
+            "displayedNumbers": "{page}/{maxPage}",
+            "next": ">",
+            "maxNext": ">>",
+            "backButton": "Back",
+            "template": [
+                "maxBack",
+                "back",
+                "displayedNumbers",
+                "next",
+                "maxNext",
+                "row",
+                "backButton"
+            ]
+        } as Config;
         /** Get the pagination display strategy based on 'currentUserPage' and 'maxPage'. */
         const strategy = getDisplayStrategy(currentUserPage, maxPage);
 
