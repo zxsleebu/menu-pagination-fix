@@ -5,10 +5,11 @@ import type {
     DynamicObject,
     NestedArrayOrObject,
     PaginationOptions,
-    Schema,
     Session,
 } from "./types.ts";
-import { loadJsonIfExist, loadSchema } from "./utils.ts";
+import { parseArrayIntoObjects as parseArrayIntoObjects_ } from "./utils.ts";
+
+export const parseArrayIntoObjects = parseArrayIntoObjects_;
 
 interface CurrentPage {
     currentUserPage: number;
@@ -22,6 +23,24 @@ type params = {
     currentUserPage: number;
     menu: MenuRange<ContextSessionMenu>;
 };
+
+const defaultSchema: Config = {
+    "maxBack": "<<",
+    "back": "<",
+    "displayedNumbers": "{page}/{maxPage}",
+    "next": ">",
+    "maxNext": ">>",
+    "backButton": "Back",
+    "template": [
+        "maxBack",
+        "back",
+        "displayedNumbers",
+        "next",
+        "maxNext",
+        "row",
+        "backButton"
+    ]
+} as Config;
 
 /**
  * Validates the inputs for pagination.
@@ -71,7 +90,6 @@ export async function createPagination(
     const {
         staticData,
         allowBackToMenu = true,
-        schema = "default",
         displayType = "text",
         dynamicDataFn,
         displayDataFn,
@@ -92,8 +110,7 @@ export async function createPagination(
                 displayDataFn,
                 buttonFn,
             },
-            menu,
-            schema,
+            menu
         );
     }
 
@@ -126,8 +143,7 @@ export async function createPagination(
                 displayDataFn,
                 dynamicDataFn,
             },
-            menu,
-            schema,
+            menu
         );
     }
 }
@@ -135,8 +151,7 @@ export async function createPagination(
 async function handleStaticData(
     session: Session,
     options: Partial<PaginationOptions>,
-    menu: MenuRange<ContextSessionMenu>,
-    schema: Schema,
+    menu: MenuRange<ContextSessionMenu>
 ) {
     const {
         staticData,
@@ -167,32 +182,16 @@ async function handleStaticData(
         }
 
         /** Try to load a configuration object from a JSON file named "config." If it fails, use the 'schema' as a fallback. */
-        const config: Config = {
-            "maxBack": "<<",
-            "back": "<",
-            "displayedNumbers": "{page}/{maxPage}",
-            "next": ">",
-            "maxNext": ">>",
-            "backButton": "Back",
-            "template": [
-                "maxBack",
-                "back",
-                "displayedNumbers",
-                "next",
-                "maxNext",
-                "row",
-                "backButton"
-            ]
-        } as Config;
+        
         /** Get the pagination display strategy based on 'currentUserPage' and 'maxPage'. */
         const strategy = getDisplayStrategy(currentUserPage, maxPage);
 
         displayPagination(
-            config.template as string[],
+            defaultSchema.template as string[],
             strategy,
             {
                 maxPage,
-                config,
+                config: defaultSchema,
                 session,
                 currentUserPage,
                 menu,
@@ -243,8 +242,7 @@ async function handleDynamicData(
     session: Session,
     maxPage: number,
     options: Partial<PaginationOptions>,
-    menu: MenuRange<ContextSessionMenu>,
-    schema: Schema,
+    menu: MenuRange<ContextSessionMenu>
 ) {
     const {
         displayType,
@@ -258,18 +256,15 @@ async function handleDynamicData(
         session.currentUserPage ??= 0;
 
         const { currentUserPage } = session;
-        /** Try to load a configuration object from a JSON file named "config." If it fails, use the 'schema' as a fallback. */
-        const config: Config = (await loadJsonIfExist("config")) as Config ||
-            (await loadSchema(schema)) as Config;
         /** Get the pagination display strategy based on 'currentUserPage' and 'maxPage'. */
         const strategy = getDisplayStrategy(currentUserPage, maxPage);
 
         displayPagination(
-            config?.template as string[],
+            defaultSchema.template as string[],
             strategy,
             {
                 maxPage,
-                config,
+                config: defaultSchema,
                 session,
                 currentUserPage,
                 menu,
