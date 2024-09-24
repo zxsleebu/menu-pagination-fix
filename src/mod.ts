@@ -586,6 +586,7 @@ function handleItem(
                 return menu.text("­");
         }
     }
+    return null;
 }
 
 /**
