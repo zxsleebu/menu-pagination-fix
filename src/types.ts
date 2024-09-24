@@ -24,7 +24,7 @@ interface TextAndPayload<C extends Context> {
 type ButtonType = "url" | "payment" | "webapp";
 
 /** Pagination Option's Types*/
-export type PaginationOptions = {
+export type PaginationOptions<C extends Context> = {
     dynamicData?: NestedArrayOrObject;
     /**
      * Static data to be passed to the pagination component.
@@ -60,9 +60,9 @@ export type PaginationOptions = {
         // deno-lint-ignore no-explicit-any
         data: any,
         index: number,
-    ) => TextAndPayload<Context> | MaybeDynamicString<Context>;
+    ) => TextAndPayload<C> | MaybeDynamicString<C>;
     // deno-lint-ignore no-explicit-any
-    buttonFn?: (ctx: Context, data: any) => void;
+    buttonFn?: (ctx: C, data: any) => void;
 };
 
 export type Schema = "default" | "numbers";
