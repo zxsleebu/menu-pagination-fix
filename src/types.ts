@@ -43,6 +43,10 @@ export type PaginationOptions = {
      */
     displayType?: "text" | "buttons";
     /**
+     * Row count
+     */
+    rowCount?: number;
+    /**
      * A function that generates dynamic data for the pagination component.
      */
     dynamicDataFn?: (
