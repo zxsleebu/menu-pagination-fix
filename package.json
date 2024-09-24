@@ -16,6 +16,7 @@
     },
     "exports": {
         ".": "./out/mod.js"
+        ".": "./out/utils.js"
     },
     "files": [
         "out/"
