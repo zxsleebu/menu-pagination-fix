@@ -8,11 +8,13 @@ import type {
     Schema,
     Session,
 } from "./types.ts";
-import { loadJsonIfExist, loadSchema } from "./utils.ts";
+import { loadJsonIfExist, loadSchema, parseArrayIntoObjects as parseArrayIntoObjects_ } from "./utils.ts";
 
 interface CurrentPage {
     currentUserPage: number;
 }
+
+export const parseArrayIntoObjects = parseArrayIntoObjects_;
 
 type ContextSessionMenu = Context & MenuFlavor & SessionFlavor<CurrentPage>;
 type params = {
