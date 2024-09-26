@@ -27,7 +27,7 @@ type params = {
 const defaultSchema: Config = {
     "maxBack": "<<",
     "back": "<",
-    "displayedNumbers": "{page}/{maxPage}",
+    "displayedNumbers": "{page} | {maxPage}",
     "next": ">",
     "maxNext": ">>",
     "backButton": "Back",
