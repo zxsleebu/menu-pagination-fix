@@ -1,4 +1,3 @@
-"use strict";
 import { Context, MenuFlavor, MenuRange, SessionFlavor } from "./deps.deno.ts";
 import type {
     Config,
@@ -15,6 +14,7 @@ interface CurrentPage {
     currentUserPage: number;
 }
 
+//@ts-expect-error types are not correct
 type ContextSessionMenu<C extends Context = Context> = C & MenuFlavor<C> & SessionFlavor<CurrentPage>;
 type params = {
     maxPage: number;
@@ -57,12 +57,12 @@ const defaultSchema: Config = {
  * This function validates the inputs for pagination, including the ContextSessionMenu object, menu range, static data, dynamic data function, and display data function.
  * It checks if the required inputs are provided and throws an error if any of them are missing.
  */
-function validateInputs(
+function validateInputs<C extends Context = Context>(
     ctx: ContextSessionMenu,
     menu: MenuRange<ContextSessionMenu>,
-    staticData: PaginationOptions["staticData"],
-    dynamicDataFn: PaginationOptions["dynamicDataFn"],
-    displayDataFn: PaginationOptions["displayDataFn"],
+    staticData: PaginationOptions<C>["staticData"],
+    dynamicDataFn: PaginationOptions<C>["dynamicDataFn"],
+    displayDataFn: PaginationOptions<C>["displayDataFn"],
 ): boolean {
     if (!("session" in ctx)) {
         throw new Error("Cannot use pagination without session!");
@@ -97,12 +97,13 @@ export async function createPagination<C extends Context>(
         buttonFn,
     } = options;
 
-    validateInputs(ctx, menu, staticData, dynamicDataFn, displayDataFn);
+    validateInputs<C>(ctx, menu, staticData, dynamicDataFn, displayDataFn);
 
+    //@ts-expect-error types are not correct
     const session: Session = ctx.session as Session;
 
     if (staticData) {
-        await handleStaticData(
+        await handleStaticData<C>(
             session,
             {
                 staticData,
@@ -153,9 +154,9 @@ export async function createPagination<C extends Context>(
     }
 }
 
-async function handleStaticData(
+async function handleStaticData<C extends Context = Context>(
     session: Session,
-    options: Partial<PaginationOptions>,
+    options: Partial<PaginationOptions<C>>,
     menu: MenuRange<ContextSessionMenu>
 ) {
     const {
@@ -179,7 +180,7 @@ async function handleStaticData(
                 (element: number | string | object, i: number) => {
                     menu.text(
                         displayDataFn(element, i),
-                        (ctx: ContextSessionMenu) => {
+                        (ctx: ContextSessionMenu<C>) => {
                             buttonFn(ctx, staticData[currentUserPage][i]);
                         },
                     );
@@ -207,6 +208,7 @@ async function handleStaticData(
                 staticData,
                 displayType,
                 allowBackToMenu,
+                //@ts-expect-error types are not correct
                 displayDataFn,
             },
         );
@@ -247,10 +249,10 @@ async function memoizeData(
     }
 }
 
-async function handleDynamicData(
+async function handleDynamicData<C extends Context = Context>(
     session: Session,
     maxPage: number,
-    options: Partial<PaginationOptions>,
+    options: Partial<PaginationOptions<C>>,
     menu: MenuRange<ContextSessionMenu>
 ) {
     const {
@@ -280,6 +282,7 @@ async function handleDynamicData(
                 dynamicData,
                 displayType,
                 allowBackToMenu,
+                //@ts-expect-error types are not correct
                 displayDataFn,
                 dynamicDataFn,
             },
