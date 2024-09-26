@@ -24,7 +24,7 @@ interface TextAndPayload<C extends Context> {
 type ButtonType = "url" | "payment" | "webapp";
 
 /** Pagination Option's Types*/
-export type PaginationOptions<C extends Context> = {
+export type PaginationOptions<C extends Context = Context> = {
     dynamicData?: NestedArrayOrObject;
     /**
      * Static data to be passed to the pagination component.
