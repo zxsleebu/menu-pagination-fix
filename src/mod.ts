@@ -15,7 +15,7 @@ interface CurrentPage {
     currentUserPage: number;
 }
 
-type ContextSessionMenu<C extends Context> = C & MenuFlavor<C> & SessionFlavor<CurrentPage>;
+type ContextSessionMenu<C extends Context = Context> = C & MenuFlavor<C> & SessionFlavor<CurrentPage>;
 type params = {
     maxPage: number;
     config: Config;
