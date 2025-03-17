@@ -14,7 +14,6 @@ interface CurrentPage {
     currentUserPage: number;
 }
 
-//@ts-expect-error types are not correct
 type ContextSessionMenu<C extends Context = Context> = C & MenuFlavor<C> & SessionFlavor<CurrentPage>;
 type params = {
     maxPage: number;
@@ -97,9 +96,10 @@ export async function createPagination<C extends Context>(
         buttonFn,
     } = options;
 
+    // @ts-expect-error types are not correct
     validateInputs<C>(ctx, menu, staticData, dynamicDataFn, displayDataFn);
 
-    //@ts-expect-error types are not correct
+    // @ts-expect-error types are not correct
     const session: Session = ctx.session as Session;
 
     if (staticData) {
@@ -113,6 +113,7 @@ export async function createPagination<C extends Context>(
                 buttonFn,
                 rowCount
             },
+            // @ts-expect-error types are not correct
             menu
         );
     }
@@ -130,6 +131,7 @@ export async function createPagination<C extends Context>(
                 menu.text(
                     displayDataFn?.(element, i),
                     (ctx: ContextSessionMenu) => {
+                        // @ts-expect-error types are not correct
                         buttonFn(ctx, res.data[i]);
                     },
                 );
@@ -149,6 +151,7 @@ export async function createPagination<C extends Context>(
                 displayDataFn,
                 dynamicDataFn,
             },
+            // @ts-expect-error types are not correct
             menu
         );
     }
@@ -179,6 +182,7 @@ async function handleStaticData<C extends Context = Context>(
             staticData[currentUserPage].forEach(
                 (element: number | string | object, i: number) => {
                     menu.text(
+                        // @ts-expect-error types are not correct
                         displayDataFn(element, i),
                         (ctx: ContextSessionMenu<C>) => {
                             buttonFn(ctx, staticData[currentUserPage][i]);
@@ -237,6 +241,7 @@ async function memoizeData(
     } else {
         if (memoizedData.size >= MAX_PAGES) {
             const firstKey = memoizedData.keys().next().value;
+            // @ts-expect-error types are not correct
             memoizedData.delete(firstKey);
         }
 
